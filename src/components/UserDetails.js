@@ -4,21 +4,19 @@ import { useParams } from "react-router-dom";
 function UserDetails() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); // Needed for test
 
   useEffect(() => {
-    setLoading(true); // Set loading true on each new request
+    setLoading(true);
     fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
-        setLoading(false); // Done loading
+        setLoading(false);
       });
   }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>; // REQUIRED FOR CYPRESS TO PASS
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
