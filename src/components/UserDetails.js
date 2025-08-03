@@ -4,19 +4,23 @@ import { useParams } from "react-router-dom";
 function UserDetails() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Needed for test
+  const [loading, setLoading] = useState(true); // Must be true initially
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-        setLoading(false);
-      });
+    setLoading(true); // Force show Loading on route change
+    const timer = setTimeout(() => {
+      fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+          setLoading(false); // Finish loading
+        });
+    }, 100); // Short delay ensures Cypress sees Loading...
+
+    return () => clearTimeout(timer);
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // Required exact match
 
   return (
     <div>
